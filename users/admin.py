@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from . import models
+from .models import User
 
 
 # admin.ModelAdmin을 상속받는 경우
@@ -17,7 +17,7 @@ from . import models
 #     )
 
 # 방법 1
-@admin.register(models.User)  # 데코레이터를 붙여 주면 CustomUserAdmin 클래스가 models.User를 사용한다는 의미
+@admin.register(User)  # 데코레이터를 붙여 주면 CustomUserAdmin 클래스가 models.User를 사용한다는 의미
 class CustomUserAdmin(UserAdmin):
 
     """Custom User Admin"""
