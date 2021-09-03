@@ -6,7 +6,13 @@ from .models import Room, RoomType, Amenity, Facility, HouseRule, Photo
 class ItemAdmin(admin.ModelAdmin):
     """Item Admin Definition"""
 
-    pass
+    list_display = (
+        "name",
+        "used_by",
+    )
+
+    def used_by(self, obj):
+        return obj.rooms.count()
 
 
 @admin.register(Room)
@@ -55,6 +61,8 @@ class RoomAdmin(admin.ModelAdmin):
         "check_in",
         "check_out",
         "instant_book",
+        "count_amenities",
+        "count_photos",
     )
     ordering = ("instant_book",)
     list_filter = (
@@ -76,6 +84,15 @@ class RoomAdmin(admin.ModelAdmin):
         "facilities",
         "house_rules",
     )
+
+    # admin안의 함수는 2개의 파라미터를 가짐, self : RoomAdmin class, obj : room
+    def count_amenities(self, obj):
+        return obj.amenities.count()
+
+    # count_amenities.short_description = "hello"
+
+    def count_photos(self, obj):
+        return obj.photos.count()
 
 
 @admin.register(Photo)
