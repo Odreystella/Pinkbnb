@@ -1,10 +1,12 @@
 from django.contrib import admin
+from django.contrib.admin.options import InlineModelAdmin
 from django.utils.html import mark_safe
 from .models import Room, RoomType, Amenity, Facility, HouseRule, Photo
 
 
 @admin.register(RoomType, Amenity, Facility, HouseRule)
 class ItemAdmin(admin.ModelAdmin):
+
     """Item Admin Definition"""
 
     list_display = (
@@ -16,9 +18,16 @@ class ItemAdmin(admin.ModelAdmin):
         return obj.rooms.count()
 
 
+class PhotoInline(admin.TabularInline):
+    model = Photo
+
+
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
+
     """Room Admin Definition"""
+
+    inlines = (PhotoInline,)
 
     fieldsets = (
         (
@@ -50,6 +59,7 @@ class RoomAdmin(admin.ModelAdmin):
         ),
         ("Last Details", {"fields": ("host",)}),
     )
+    raw_id_fields = ("host",)
     list_display = (
         "name",
         "country",

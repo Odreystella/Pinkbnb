@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from rooms.models import Room
 from .models import User
 
 
@@ -16,11 +17,18 @@ from .models import User
 #         "superhost",
 #     )
 
+
+class RoomInline(admin.TabularInline):
+    model = Room
+
+
 # 방법 1
 @admin.register(User)  # 데코레이터를 붙여 주면 CustomUserAdmin 클래스가 models.User를 사용한다는 의미
 class CustomUserAdmin(UserAdmin):
 
     """Custom User Admin"""
+
+    inlines = (RoomInline,)
 
     fieldsets = UserAdmin.fieldsets + (
         (
