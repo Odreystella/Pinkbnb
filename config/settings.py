@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -138,3 +139,9 @@ STATIC_URL = "/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.User"
+
+# media 파일을 실제 저장하는 위치, /home/odreystella/Documents/dev/airbnb-clone/uploads
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
+
+# MEIDA_ROOT에 저장된 파일을 다룸, /media/uploads의 {폴더명}
+MEDIA_URL = "/media/"
