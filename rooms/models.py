@@ -87,6 +87,13 @@ class Room(AbstractTimeStamped):
     def __str__(self):
         return self.name
 
+    # 어떤 상황이든(콘솔, 어드민, 뷰 등) 모델이 변경되면 저장하는 메서드
+    def save(self, *args, **kwargs):
+        # self.city = self.city[0].upper() + self.city[1:]
+        # self.city = self.city.capitalize()
+        self.city = self.city.title()
+        super().save(*args, **kwargs)
+
     def total_rating(self):
 
         all_reviews = self.reviews.all()
