@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.utils.html import mark_safe
 from rooms.models import Room
 from .models import User
 
@@ -49,6 +50,7 @@ class CustomUserAdmin(UserAdmin):
 
     list_display = (
         "username",
+        # "get_thumbnail",
         "first_name",
         "last_name",
         "email",
@@ -60,6 +62,11 @@ class CustomUserAdmin(UserAdmin):
         "is_superuser",
     )
     list_filter = UserAdmin.list_filter + ("superhost",)
+
+    # def get_thumbnail(self, obj):
+    #     return mark_safe(f"<img width='50px' src='{obj.avatar}' />")
+
+    # get_thumbnail.short_description = "avatar"
 
 
 # admin.site.register(models.User, CustomUserAdmin)  # 방법 2
