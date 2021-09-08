@@ -38,7 +38,7 @@ class Command(BaseCommand):
             },
         )
         # 사진 추가 로직
-        created_rooms = seeder.execute()  # 생성된 room의 pk list를 리턴함
+        created_rooms = seeder.execute()  # 생성된 room의 pk list를 딕셔너리로 리턴함
         created_clean = flatten(list(created_rooms.values()))
         amenities = Amenity.objects.all()
         facilities = Facility.objects.all()

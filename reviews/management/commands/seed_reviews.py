@@ -39,16 +39,3 @@ class Command(BaseCommand):
         )
         seeder.execute()
         self.stdout.write(self.style.SUCCESS(f"{number} reviews created!"))
-
-
-# review = models.TextField()
-#     accuracy = models.IntegerField()
-#     communication = models.IntegerField()
-#     cleanliness = models.IntegerField()
-#     location = models.IntegerField()
-#     check_in = models.IntegerField()
-#     value = models.IntegerField()
-#     user = models.ForeignKey(
-#         "users.User", on_delete=models.CASCADE, related_name="reviews"
-#     )
-#     room
