@@ -6,7 +6,7 @@ Home
 
 {% block content %}
 
-{% for room in page_obj.object_list %}
+{% for room in object_list %}
 <h3>{{room.name}} / ${{room.price}}</h3>
 {% endfor %}
 
