@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django_countries.fields import CountryField
 from core.models import AbstractTimeStamped
 
@@ -93,6 +94,9 @@ class Room(AbstractTimeStamped):
         # self.city = self.city.capitalize()
         self.city = self.city.title()
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("rooms:detail", kwargs={"pk": self.pk})
 
     def total_rating(self):
 
