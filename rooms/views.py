@@ -22,4 +22,5 @@ def room_detail(request, pk):
         return render(request, "rooms/detail.html", {"room":room})
 
     except Room.DoesNotExist:
-        return redirect(reverse("core:home"))
+        # return redirect(reverse("core:home"))
+        raise Http404()  # render 404.html when DEBUG=False, ALLOWED_HOSTS = ["*"]
