@@ -11,4 +11,7 @@
     "python.linting.flake8Args": [
         "--max-line-length=88"
     ],
+    "files.associations": {
+        "*.html" : "html"
+    }
 }

@@ -90,6 +90,7 @@ class RoomAdmin(admin.ModelAdmin):
     search_fields = (
         "city",
         "^host__username",
+        "name",
     )
     filter_horizontal = (
         "amenities",
