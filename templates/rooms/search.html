@@ -22,4 +22,15 @@
         </li>
         {% endfor %}
     </ul>
+    <div>
+        {% if page_obj.has_previous %}
+            <a href="{{current_url}}page={{page_obj.previous_page_number}}"><<</a>
+        {% endif %}
+
+        Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+
+        {% if page_obj.has_next %}
+            <a href="{{current_url}}page={{page_obj.next_page_number}}">>></a>
+        {% endif %}
+    </div>
 {% endblock content %}
