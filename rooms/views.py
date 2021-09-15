@@ -31,8 +31,9 @@ class SearchView(View):
 
     def get(self, request):
         country = request.GET.get("country")
+        city = request.GET.get("city")
 
-        if country:
+        if city:
 
             form = SearchForm(request.GET)
             
@@ -93,12 +94,16 @@ class SearchView(View):
                 paginator = Paginator(qs, 2)
                 page = request.GET.get("page", 1)
                 rooms = paginator.get_page(page)
-                current_url = "".join(request.get_full_path().split("page")[:-1])
-                print(current_url)
-            
-            return render(request, "rooms/search.html", {"form": form, "page_obj": rooms, "current_url": current_url})
+                current_url = "".join(request.get_full_path().split("page")[0]) 
+                if current_url[-1] != "&":
+                    current_url = "".join(request.get_full_path().split("page")[0]) + "&"
 
-        else : 
+                print("current_url: ", current_url)
+                
+                return render(request, "rooms/search.html", {"form": form, "page_obj": rooms, "current_url": current_url})
+
+        else: 
+
             form = SearchForm()
         
         return render(request, "rooms/search.html", {"form": form})
@@ -137,3 +142,15 @@ class EditRoomView(UpdateView):
         return room
 
 
+class CreateRoomView(FormView):
+
+    form_class = CreateRoomForm
+    template_name = "rooms/room_create.html"
+
+    def form_valid(self, form):
+        room = form.save()
+        room.host = self.request.user
+        room.save()
+        form.save_m2m()
+        # messages.success(self.request, "Room Created")
+        return redirect(reverse("rooms:detail", kwargs={"pk": room.pk}))
