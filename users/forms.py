@@ -6,23 +6,14 @@ class LoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
 
-    def clean_email(self):
-        email = self.cleaned_data.get("email")
-        try:
-            User.objects.get(username=email)
-            print("clean email")
-            return email
-        except User.DoesNotExist:
-            raise forms.ValidationError("User does not exist")
-
-    def clean_password(self):
+    def clean(self):
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password")
         try:
-            user = User.objects.get(username=email)
+            user = User.objects.get(email=email)
             if user.check_password(password):
-                return password
+                return self.cleaned_data
             else:
-                raise forms.ValidationError("Password is wrong")
+                self.add_error("password", forms.ValidationError("Password is wrong"))
         except User.DoesNotExist:
-            pass
+            self.add_error("email", forms.ValidationError("User does not exist"))
