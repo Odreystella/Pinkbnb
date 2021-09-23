@@ -33,6 +33,10 @@ class User(AbstractUser):
         (CURRENCY_KRW, "KRW"),
     )
 
+    # USERNAME_FIELD = "email"
+    # REQUIRED_FIELDS = ()
+    # email = models.EmailField(max_length=150, unique=True)
+
     avatar = models.ImageField(upload_to="avatars", blank=True)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=10, blank=True)
     bio = models.TextField(blank=True)

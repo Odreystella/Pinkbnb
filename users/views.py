@@ -3,7 +3,7 @@ from django.views.generic import FormView
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
-from .forms import LoginForm
+from .forms import LoginForm, SignUpForm
 
 # View 상속하는 경우
 # class LoginView(View):
@@ -42,6 +42,27 @@ class LoginView(FormView):
         if user is not None:
             login(self.request, user)
         return super().form_valid(form)  # get_success_url 호출함
+
+
+class SignupView(FormView):
+    template_name = "users/signup.html"
+    form_class = SignUpForm
+    success_url = reverse_lazy("core:home")  
+    initial = {
+        "first_name": "Stella",
+        "last_name": "Odrey",
+        "email": "ojo1001@naver.com",
+    }
+
+    def form_valid(self, form):
+        form.save()
+        email = form.cleaned_data.get("email")
+        password = form.cleaned_data.get("password")
+        user = authenticate(self.request, username=email, password=password)
+        if user is not None:
+            login(self.request, user)
+        return super().form_valid(form)
+
 
 
 def log_out(request):
