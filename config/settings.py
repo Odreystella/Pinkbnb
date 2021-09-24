@@ -148,3 +148,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
 
 # MEIDA_ROOT에 저장된 파일을 다룸, /media/uploads의 {폴더명}
 MEDIA_URL = "/media/"
+
+# Email Configuration
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get("MAILGUN_USERNAME")
+EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_PASSWORD")
+EMAIL_USE_TLS = True

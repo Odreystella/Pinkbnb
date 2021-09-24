@@ -64,9 +64,8 @@ class SignupForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name")
+        fields = ("first_name", "last_name", "email")
 
-    email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
     password1 = forms.CharField(widget=forms.PasswordInput, label="Comfirm Password")
 

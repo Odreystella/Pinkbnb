@@ -1,5 +1,7 @@
+import uuid
+from django.core.mail import send_mail
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-
 from django.db import models
 
 
@@ -44,6 +46,22 @@ class User(AbstractUser):
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=2, blank=True, default=LANGUAGE_KOREAN)
     currency = models.CharField(choices=CURRENCY_CHOICES, max_length=3, blank=True, default=CURRENCY_KRW)
     superhost = models.BooleanField(default=False)
+    email_verified = models.BooleanField(default=False)
+    email_secret = models.CharField(max_length=20, default="", blank=True)
 
     def __str__(self):
         return self.username
+
+    def verify_email(self):
+        if self.email_verified is False:
+            secret = uuid.uuid4().hex[:20]
+            self.email_secret = secret
+            send_mail(
+                'Verify Aribnb Account',  
+                f'Verify account, this is your secret: {secret}',  
+                settings.EMAIL_HOST_USER,  
+                [self.email],  
+                fail_silently=False, 
+            )
+            print("이메일 보냄")
+        return
