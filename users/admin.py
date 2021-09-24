@@ -6,7 +6,7 @@ from .models import User
 
 
 # admin.ModelAdmin을 상속받는 경우
-# @admin.register(models.User)
+# @admin.register(User)
 # class CustomUserAdmin(admin.ModelAdmin):
 
 #     """ Custom User Admin """
@@ -60,6 +60,8 @@ class CustomUserAdmin(UserAdmin):
         "superhost",
         "is_staff",
         "is_superuser",
+        "email_verified",
+        "email_secret",
     )
     list_filter = UserAdmin.list_filter + ("superhost",)
 
