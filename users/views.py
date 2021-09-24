@@ -1,3 +1,5 @@
+import os
+import requests
 from django.views import View
 from django.views.generic import FormView
 from django.contrib.auth import authenticate, login, logout
@@ -82,3 +84,24 @@ def complete_verification(request, key):
         # To do: add error message 
         pass
     return redirect(reverse("core:home"))
+
+
+# pinkbnb -> github
+def github_login(request):
+    client_id = os.environ.get("GITHUB_CLIENT_ID")
+    redirect_uri = "http://127.0.0.1:8000/users/login/github/callback/"
+    return redirect(f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}")
+
+
+# github -> pinkbnb
+def github_callback(request):
+    code = request.GET.get("code", None)
+    client_id = os.environ.get("GITHUB_CLIENT_ID")
+    client_secret = os.environ.get("GITHUB_CLIENT_SECRET")
+    if code is not None:
+        request = requests.post(f"https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}",
+        headers={"Accept": "application/json"}
+        )
+        print(request.json())
+    else:
+        return redirect(reverse("core:home"))
