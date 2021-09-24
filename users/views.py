@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
 from .forms import LoginForm, SignupForm
+from .models import User
 
 # View 상속하는 경우
 # class LoginView(View):
@@ -44,6 +45,11 @@ class LoginView(FormView):
         return super().form_valid(form)  # get_success_url 호출함
 
 
+def log_out(request):
+    logout(request)
+    return redirect(reverse("core:home"))
+
+
 class SignupView(FormView):
     template_name = "users/signup.html"
     form_class = SignupForm
@@ -55,7 +61,7 @@ class SignupView(FormView):
     }
 
     def form_valid(self, form):
-        form.save()
+        form.save()         # form.is_valid() 가 True라면 save
         email = form.cleaned_data.get("email")
         password = form.cleaned_data.get("password")
         user = authenticate(self.request, username=email, password=password)
@@ -65,6 +71,14 @@ class SignupView(FormView):
         return super().form_valid(form)
 
 
-def log_out(request):
-    logout(request)
+def complete_verification(request, key):
+    try:
+        user = User.objects.get(email_secret=key)
+        user.email_verified = True
+        user.email_secret = ""
+        user.save()
+        # To do: add sucess message
+    except User.DoesNotExist:
+        # To do: add error message 
+        pass
     return redirect(reverse("core:home"))
