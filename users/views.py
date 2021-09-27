@@ -5,6 +5,7 @@ import requests
 from django.views import View
 from django.views.generic import FormView
 from django.contrib.auth import authenticate, login, logout
+from django.core.files.base import ContentFile
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
 from .forms import LoginForm, SignupForm
@@ -176,7 +177,7 @@ def kakao_callback(request):
             f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={client_id}&code={code}&redirect_uri={redirect_uri}",
            )
         token_json = token_request.json()
-        print(token_json)
+        # print(token_json)
         error = token_json.get("error", None)
         if error is not None:
             raise KakaoException()
@@ -186,14 +187,15 @@ def kakao_callback(request):
             headers={"Authorization": f"Bearer {access_token}"}
             )
         profile_json = profile_request.json()
-        print(profile_json)
+        # print(profile_json)
         username = profile_json.get("id")
         if username is not None:
             email = profile_json.get("kakao_account").get("email", None)
             if email is None:
                 raise KakaoException()
             nickname = profile_json.get("properties").get("nickname")
-            # profile_img = profile_json.get("properties").get("profile_image")
+            profile_img = profile_json.get("properties").get("profile_image")
+            # print(profile_img)
             try:
                 user = User.objects.get(email=email)
                 if user.login_method != User.LOGIN_KAKAO:
@@ -208,6 +210,9 @@ def kakao_callback(request):
                 )
                 user.set_unusable_password()
                 user.save()
+                if profile_img is not None:
+                    photo_request = requests.get(profile_img)
+                    user.avatar.save(f"{nickname}-avatar", ContentFile(photo_request.content))
             login(request, user)
             return redirect(reverse("core:home"))
         else:
