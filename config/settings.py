@@ -136,6 +136,8 @@ USE_TZ = False  # 모델의 타임존도 Asia/Seoul로 쓰기 위해
 
 STATIC_URL = "/static/"
 
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
