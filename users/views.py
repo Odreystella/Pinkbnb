@@ -170,6 +170,7 @@ def kakao_login(request):
 
 def kakao_callback(request):
     try:
+        # access_token 받기
         code = request.GET.get("code")
         client_id = os.environ.get("KAKAO_CLIENT_ID")
         redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback/"
@@ -182,6 +183,8 @@ def kakao_callback(request):
         if error is not None:
             raise KakaoException()
         access_token = token_json.get("access_token")
+        
+        # 카카오 API 호출하기
         profile_request = requests.get(
             "https://kapi.kakao.com/v2/user/me",
             headers={"Authorization": f"Bearer {access_token}"}
@@ -200,6 +203,8 @@ def kakao_callback(request):
                 user = User.objects.get(email=email)
                 if user.login_method != User.LOGIN_KAKAO:
                     raise KakaoException()
+                    
+            # API로 가져온 사용자 정보로 유저 생성하기
             except User.DoesNotExist:
                 user = User.objects.create(
                     username=email,

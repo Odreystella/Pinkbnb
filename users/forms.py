@@ -1,7 +1,9 @@
 from django import forms
 from django.core import exceptions
-from .models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.password_validation import validate_password
+from django.core import validators
+from .models import User
 
 class LoginForm(forms.Form):
 
@@ -66,7 +68,7 @@ class SignupForm(forms.ModelForm):
         model = User
         fields = ("first_name", "last_name", "email")
 
-    password = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput, validators=[validate_password])
     password1 = forms.CharField(widget=forms.PasswordInput, label="Comfirm Password")
 
     def clean_email(self):
