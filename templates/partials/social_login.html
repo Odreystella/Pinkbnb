@@ -1,8 +1,14 @@
-<div>
-    <a href="{% url 'users:github-login' %}">
-        Continue with GitHub
+<div class="flex flex-col w-full">
+    <a href="{% url 'users:github-login' %}" class="w-full border-2 border-gray-400 text-gray-700 mb-2 font-medium text-center py-3 rounded-md">
+        <div class="flex justify-between mx-3">
+            <i class="fab fa-github mt-1 fa-lg"></i> 
+            <span class="px-24">Continue with GitHub</span>
+        </div>
     </a>
-    <a href="{% url 'users:kakao-login' %}">
-        Continue with KaKao
+    <a href="{% url 'users:kakao-login' %}" class="w-full border-2 border-gray-400 text-gray-700 mb-2 font-medium text-center py-3 rounded-md">
+        <div class="flex justify-between mx-3">
+            <i class="fas fa-comment mt-1 fa-lg"></i> 
+            <span class="px-24">Continue with KaKao</span>
+        </div>
     </a>
 </div>
