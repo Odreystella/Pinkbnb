@@ -6,23 +6,32 @@ Home
 
 {% block content %}
 
-{% for room in rooms %}
-<h3>
-    <a href="{% url 'rooms:detail' room.pk %}">{{room.name}} / ${{room.price}}</a>
-</h3>
-{% endfor %}
+    <div class="bg-gray-800 w-full h-58vh mb-5 bg-cover bg-center" style="background-image: url('/static/img/ocean.jpg')">
 
-<h5>
-    {% if page_obj.has_previous %}
-        <a href="/?page={{page_obj.previous_page_number }}"><<</a>
-    {% endif %}
+    </div>
+    <div class="container mx-auto pb-10">
+        <div class="flex flex-wrap -mx-10 mb-10">
+            {% for room in rooms %}
+                {% include 'partials/room_card.html' with room=room %}
+            {% endfor %}
+        </div>
         
-    {{page_obj.number}} of {{page_obj.paginator.num_pages}}
-    
-    {% if page_obj.has_next %}
-        <a href="/?page={{page_obj.next_page_number }}">>></a>
-    {% endif %}
-</h5>
+        <div class="flex items-center justify-center">
+            {% if page_obj.has_previous %}
+                <a href="/?page={{page_obj.previous_page_number }}" class="text-pink-400">
+                    <i class="fas fa-chevron-left fa-lg"></i>
+                </a>
+            {% endif %}
+            
+            <span class="mx-10 font-medium text-lg">{{page_obj.number}} of {{page_obj.paginator.num_pages}}</span>
+            
+            {% if page_obj.has_next %}
+                <a href="/?page={{page_obj.next_page_number }}" class="text-pink-400">
+                    <i class="fas fa-chevron-right fa-lg"></i>
+                </a>
+            {% endif %}
+        </div>
+    </div>
 
 
 {% endblock content %}

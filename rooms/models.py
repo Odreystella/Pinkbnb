@@ -109,3 +109,7 @@ class Room(AbstractTimeStamped):
 
         except ZeroDivisionError:
             return 0
+
+    def first_photo(self):
+        photo, =self.photos.all()[:1]
+        return photo.file.url

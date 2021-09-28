@@ -49,7 +49,7 @@ class Command(BaseCommand):
             for i in range(3, random.randint(5, 10)):
                 Photo.objects.create(
                     caption=seeder.faker.sentence(),
-                    file=f"room_photos/{random.randint(1, 31)}.webp",
+                    file=f"room_photos/{random.randint(1, 27)}.webp",
                     room=room,
                 )
             for a in amenities:
