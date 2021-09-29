@@ -3,12 +3,13 @@ from django.core import exceptions
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.password_validation import validate_password
 from django.core import validators
+from django.forms import widgets
 from .models import User
 
 class LoginForm(forms.Form):
 
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    email = forms.EmailField(widget=forms.EmailInput(attrs={"placeholder": "Email"}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder":"Password"}))
 
     def clean(self):
         email = self.cleaned_data.get("email")
@@ -67,9 +68,14 @@ class SignupForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ("first_name", "last_name", "email")
+        widgets = {
+            "first_name": forms.TextInput(attrs={"placeholder": "First Name"}),
+            "last_name": forms.TextInput(attrs={"placeholder": "Last Name"}),
+            "email": forms.EmailInput(attrs={"placeholder": "Email"}),
+        }
 
-    password = forms.CharField(widget=forms.PasswordInput, validators=[validate_password])
-    password1 = forms.CharField(widget=forms.PasswordInput, label="Comfirm Password")
+    password = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Password"}), validators=[validate_password])
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Confirm Password"}), label="Comfirm Password")
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
