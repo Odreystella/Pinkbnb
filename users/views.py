@@ -3,7 +3,7 @@ from django.utils.html import avoid_wrapping
 from django.views.generic.base import RedirectView
 import requests
 from django.views import View
-from django.views.generic import FormView
+from django.views.generic import FormView, DetailView, UpdateView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.core.files.base import ContentFile
@@ -221,3 +221,28 @@ def kakao_callback(request):
     except KakaoException as e:
         messages.error(request, e)
         return redirect(reverse("users:login"))
+
+
+class UserProfileView(DetailView):
+
+    model = User
+    context_object_name = "user_obj"
+
+
+class UpdateProfileView(UpdateView):
+    
+    model = User
+    template_name = "users/update-profile.html"
+    fields = (
+        "first_name",
+        "last_name",
+        "avatar",
+        "gender",
+        "bio",
+        "birthdate",
+        "language",
+        "currency",
+    )
+
+    def get_object(self, queryset=None):
+        return self.request.user
