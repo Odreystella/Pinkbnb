@@ -53,6 +53,7 @@ class LoginView(FormView):
 
 def log_out(request):
     logout(request)
+    messages.info(request, "See you later")
     return redirect(reverse("core:home"))
 
 
