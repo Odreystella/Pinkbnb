@@ -6,6 +6,10 @@
     @apply text-center w-full font-medium py-3 rounded-md;
 }
 
+.btn-link {
+    @apply text-center py-3 rounded-lg font-light text-lg w-full bg-red-500 text-white;
+}
+
 input {
     @apply w-full font-medium py-3 rounded-md border border-gray-400 focus:outline-none focus:border-gray-700 text-left px-5;
 }

@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
+from django.urls import reverse
 
 
 class User(AbstractUser):
@@ -65,6 +66,9 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    def get_absolute_url(self):
+        return reverse('users:profile', kwargs={'pk': self.pk})
 
     def verify_email(self):
         if self.email_verified is False:

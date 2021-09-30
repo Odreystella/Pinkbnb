@@ -1,12 +1,11 @@
-<div class="w-1/4 mb-10 px-2">
+<div class="w-1/4 mb-10 px-2 overflow-hidden">
     <a href="{% url 'rooms:detail' room.pk %}">
         <div class="w-full h-64 mb-3 bg-cover bg-center rounded-lg" style="background-image: url({{room.first_photo}});"></div>
         <div class="flex justify-between truncate py-2">
-            <div>
+            <div class="w-4/5 overflow-hidden flex">
                 {% if room.host.superhost %}
-                <span class="mr-px uppercase font-medium text-xs border border-black text-black rounded px-1 py-1">superhost</span>
+                     <span class="mr-px uppercase font-medium text-xs border border-black text-black rounded px-1 py-1">superhost</span>
                 {% endif %}
-                
                 <span class="text-sm text-gray-600">{{room.city}}, {{room.country.name}}</span>
             </div>
             <span class="text-sm font-medium">
@@ -14,6 +13,6 @@
                 {{room.total_rating}}
             </span>
         </div>
-        <span class="text-black text-sm truncate">{{room.name}}</span>
+        <span class="text-black w-11/12 text-sm truncate">{{room.name}}</span>
     </a>
 </div>
