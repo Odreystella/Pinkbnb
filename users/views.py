@@ -5,6 +5,7 @@ import requests
 from django.views import View
 from django.views.generic import FormView
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from django.core.files.base import ContentFile
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
@@ -109,7 +110,7 @@ def github_callback(request):
             token_json = token_request.json()
             error = token_json.get("error", None)
             if error is not None:                    # 2. 시간 초과, code 두번 이상 사용 등으로 error가 있다면 redirect / json에 에러가 있는지 체크
-                raise GithubException()
+                raise GithubException("Can't get access token")
             else:                                    # 3. 에러가 없으면, callback로 받은 code로 access_token 발급 받아서  
                 access_token = token_json.get("access_token")
                 profile_request = requests.get(      # 3. github api에 requests 보내기
@@ -128,7 +129,7 @@ def github_callback(request):
                     try:                                     # 6. pinkbnb에 해당 이메일로 이미 유저가 존재하는데, 그 유저가 이미 github의 로그인 인증을 거쳤다면 로그인 시켜주기
                         user = User.objects.get(email=email) 
                         if user.login_method != User.LOGIN_GITHUB: 
-                            raise GithubException()                # 6-1. 다른 login_method로 만들어진 유저라면 에러 발생
+                            raise GithubException(f"Please log in with: {user.login_method}") # 6-1. 다른 login_method로 만들어진 유저라면 에러 발생
                                 
                     except User.DoesNotExist:                # 7. pinkbnb에 해당 이메일의 유저가 없다면 만들어주기
                         user = User.objects.create(
@@ -142,13 +143,14 @@ def github_callback(request):
                         user.set_unusable_password()
                         user.save()
                     login(request, user)
+                    messages.success(request, f"Welcome back {user.first_name}")
                     return redirect(reverse("core:home"))
                 else:                                        # 8. user 정보가 없다면 에러 발생
-                    raise GithubException()
+                    raise GithubException("Can't get your profile")
         else:
-            raise GithubException()
-    except GithubException:
-        # Todo: send error message
+            raise GithubException("Can't get code")
+    except GithubException as e:
+        messages.error(request, e)
         return redirect(reverse("users:login"))     
 
 
@@ -176,7 +178,7 @@ def kakao_callback(request):
         # print(token_json)
         error = token_json.get("error", None)
         if error is not None:
-            raise KakaoException()
+            raise KakaoException("Can't get authorization code.")
         access_token = token_json.get("access_token")
         
         # 카카오 API 호출하기
@@ -186,37 +188,35 @@ def kakao_callback(request):
             )
         profile_json = profile_request.json()
         # print(profile_json)
-        username = profile_json.get("id")
-        if username is not None:
-            email = profile_json.get("kakao_account").get("email", None)
-            if email is None:
-                raise KakaoException()
-            nickname = profile_json.get("properties").get("nickname")
-            profile_img = profile_json.get("properties").get("profile_image")
-            # print(profile_img)
-            try:
-                user = User.objects.get(email=email)
-                if user.login_method != User.LOGIN_KAKAO:
-                    raise KakaoException()
-                    
-            # API로 가져온 사용자 정보로 유저 생성하기
-            except User.DoesNotExist:
-                user = User.objects.create(
-                    username=email,
-                    first_name=nickname,
-                    email=email,
-                    login_method=User.LOGIN_KAKAO,
-                    email_verified=True,
-                )
-                user.set_unusable_password()
-                user.save()
-                if profile_img is not None:
-                    photo_request = requests.get(profile_img)
-                    user.avatar.save(f"{nickname}-avatar", ContentFile(photo_request.content))
-            login(request, user)
-            return redirect(reverse("core:home"))
-        else:
-            raise KakaoException()
+        email = profile_json.get("kakao_account").get("email", None)
+        if email is None:
+            raise KakaoException("Plase also give me your email")
+        nickname = profile_json.get("properties").get("nickname")
+        profile_img = profile_json.get("properties").get("profile_image")
+        # print(profile_img)
+        try:
+            user = User.objects.get(email=email)
+            if user.login_method != User.LOGIN_KAKAO:
+                raise KakaoException(f"Please log in with: {user.login_method}")
+                
+        # API로 가져온 사용자 정보로 유저 생성하기
+        except User.DoesNotExist:
+            user = User.objects.create(
+                username=email,
+                first_name=nickname,
+                email=email,
+                login_method=User.LOGIN_KAKAO,
+                email_verified=True,
+            )
+            user.set_unusable_password()
+            user.save()
+            if profile_img is not None:
+                photo_request = requests.get(profile_img)
+                user.avatar.save(f"{nickname}-avatar", ContentFile(photo_request.content))
+        login(request, user)
+        messages.success(request, f"Welcome back {user.first_name}")
+        return redirect(reverse("core:home"))
 
-    except KakaoException:
+    except KakaoException as e:
+        messages.error(request, e)
         return redirect(reverse("users:login"))
