@@ -11,7 +11,12 @@ input {
 }
 
 form {
-    input {
-        @apply mb-3;
+    .input {
+        @apply mb-3 w-full;
+        &.has_error {
+            input {
+                @apply text-gray-400 bg-pink-100 border-pink-600 focus:border-pink-600;
+            }
+        }
     }
 }
