@@ -12,7 +12,7 @@ from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
 from .forms import LoginForm, SignupForm, ProfileForm
 from .models import User
-from .mixins import LoggedOutOnlyView
+from .mixins import LoggedOutOnlyView, LoggedInOnlyView, EmailLoginOnlyView
 
 # View 상속하는 경우
 # class LoginView(View):
@@ -38,7 +38,7 @@ class LoginView(LoggedOutOnlyView, FormView):
 
     template_name = "users/login.html"
     form_class = LoginForm
-    success_url = reverse_lazy("core:home")  # 성공할 때 사용될 수 있게 reverse_lazy 씀
+    # success_url = reverse_lazy("core:home")  # 클래스안에서는 reverse_lazy 씀
     initial = {"email": "admin@admin.com"}
 
     def form_valid(self, form):
@@ -51,6 +51,13 @@ class LoginView(LoggedOutOnlyView, FormView):
         if user is not None:
             login(self.request, user)
         return super().form_valid(form)  # get_success_url 호출함
+    
+    def get_success_url(self):
+        next_arg = self.request.GET.get("next")
+        if next_arg is not None:
+            return next_arg
+        else:
+            return reverse("core:home")
 
 
 def log_out(request):
@@ -145,8 +152,10 @@ def github_callback(request):
                         )
                         user.set_unusable_password()
                         user.save()
+
                     login(request, user)
                     messages.success(request, f"Welcome back {user.first_name}")
+                    
                     return redirect(reverse("core:home"))
                 else:                                        # 8. user 정보가 없다면 에러 발생
                     raise GithubException("Can't get your profile")
@@ -216,6 +225,7 @@ def kakao_callback(request):
             if profile_img is not None:
                 photo_request = requests.get(profile_img)
                 user.avatar.save(f"{nickname}-avatar", ContentFile(photo_request.content))
+        
         login(request, user)
         messages.success(request, f"Welcome back {user.first_name}")
         return redirect(reverse("core:home"))
@@ -233,7 +243,7 @@ class UserProfileView(DetailView):
 
 # UpdateView를 사용하면 form을 따로 정의하지 않아도 됨
 # form에 많은 컨트롤이 필요하다면 따로 사용하는게 좋음
-class UpdateProfileView(SuccessMessageMixin, UpdateView):
+class UpdateProfileView(LoggedInOnlyView, SuccessMessageMixin, UpdateView):
     
     model = User
     form_class = ProfileForm
@@ -257,7 +267,7 @@ class UpdateProfileView(SuccessMessageMixin, UpdateView):
         return form
 
   
-class UpdatePasswordView(SuccessMessageMixin,PasswordChangeView):
+class UpdatePasswordView(LoggedInOnlyView, EmailLoginOnlyView, SuccessMessageMixin,PasswordChangeView):
 
     template_name = "users/update_password.html"
     success_message = "Password Updated"
