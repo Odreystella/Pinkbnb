@@ -12,6 +12,7 @@ class User(AbstractUser):
 
     """Custom User Model"""
 
+    SELECT_GENDER = "Select Gender"
     GENDER_MALE = "male"
     GENDER_FEMALE = "female"
     GENDER_OTHER = "other"
@@ -54,7 +55,7 @@ class User(AbstractUser):
     # email = models.EmailField(max_length=150, unique=True)
 
     avatar = models.ImageField(upload_to="avatars", blank=True)
-    gender = models.CharField(choices=GENDER_CHOICES, max_length=10, blank=True)
+    gender = models.CharField(choices=GENDER_CHOICES, max_length=20, blank=True, default=GENDER_OTHER)
     bio = models.TextField(blank=True)
     birthdate = models.DateField(blank=True, null=True)
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=2, blank=True, default=LANGUAGE_KOREAN)

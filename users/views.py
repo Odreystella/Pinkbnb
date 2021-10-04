@@ -1,16 +1,18 @@
 import os
-from django.utils.html import avoid_wrapping
-from django.views.generic.base import RedirectView
 import requests
+from django.views.generic.base import RedirectView
 from django.views import View
+from django.contrib.auth.views import PasswordChangeView
 from django.views.generic import FormView, DetailView, UpdateView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.files.base import ContentFile
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
-from .forms import LoginForm, SignupForm
+from .forms import LoginForm, SignupForm, ProfileForm
 from .models import User
+from .mixins import LoggedOutOnlyView
 
 # View 상속하는 경우
 # class LoginView(View):
@@ -32,7 +34,7 @@ from .models import User
 #         return render(request, "users/login.html", {"form": form})
 
 # FormView 상속하는 경우
-class LoginView(FormView):
+class LoginView(LoggedOutOnlyView, FormView):
 
     template_name = "users/login.html"
     form_class = LoginForm
@@ -229,20 +231,44 @@ class UserProfileView(DetailView):
     context_object_name = "user_obj"
 
 
-class UpdateProfileView(UpdateView):
+# UpdateView를 사용하면 form을 따로 정의하지 않아도 됨
+# form에 많은 컨트롤이 필요하다면 따로 사용하는게 좋음
+class UpdateProfileView(SuccessMessageMixin, UpdateView):
     
     model = User
+    form_class = ProfileForm
     template_name = "users/update-profile.html"
-    fields = (
-        "first_name",
-        "last_name",
-        "avatar",
-        "gender",
-        "bio",
-        "birthdate",
-        "language",
-        "currency",
-    )
+    # fields = (
+    #     "first_name",
+    #     "last_name",
+    #     "gender",
+    #     "bio",
+    #     "birthdate",
+    #     "language",
+    #     "currency",
+    # )
+    success_message = "Profile Updated"
 
     def get_object(self, queryset=None):
         return self.request.user
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        return form
+
+  
+class UpdatePasswordView(SuccessMessageMixin,PasswordChangeView):
+
+    template_name = "users/update_password.html"
+    success_message = "Password Updated"
+
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        form.fields["old_password"].widget.attrs = {"placeholder": "Current password"}
+        form.fields["new_password1"].widget.attrs = {"placeholder": "New password"}
+        form.fields["new_password2"].widget.attrs = {"placeholder": "Confirm new password"}
+        return form
+
+    def get_success_url(self):
+        return self.request.user.get_absolute_url()
