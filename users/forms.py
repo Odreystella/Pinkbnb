@@ -103,3 +103,23 @@ class SignupForm(forms.ModelForm):
         user.save()
 
     
+class ProfileForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = (
+            "first_name",
+            "last_name",
+            "gender",
+            "bio",
+            "birthdate",
+            "language",
+            "currency",)
+        
+        widgets = {
+            "first_name" : forms.TextInput(attrs={"placeholder": "First Name"}),
+            "last_name" : forms.TextInput(attrs={"placeholder": "Last Name"}),
+            "bio" : forms.Textarea(attrs={"placeholder": "Bio"}),
+            "birthdate" : forms.DateInput(attrs={"placeholder": "Birthdate"}),
+            "language" : forms.Select(attrs={"value": "aa"}),
+        }
