@@ -46,7 +46,7 @@ class Command(BaseCommand):
 
         for pk in created_clean:
             room = Room.objects.get(pk=pk)
-            for i in range(3, random.randint(5, 10)):
+            for i in range(1, random.randint(6, 10)):
                 Photo.objects.create(
                     caption=seeder.faker.sentence(),
                     file=f"room_photos/{random.randint(1, 27)}.webp",
