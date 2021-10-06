@@ -37,7 +37,7 @@ class SearchView(View):
 
             form = SearchForm(request.GET)
             
-            if form.is_valid():
+            if form.is_valid():  # 유효성 검증을 통과한 폼 데이터는 cleaned_data에 담겨있음
                 city = form.cleaned_data.get("city")
                 country = form.cleaned_data.get("country")
                 room_type = form.cleaned_data.get("room_type")
@@ -109,6 +109,7 @@ class SearchView(View):
         return render(request, "rooms/search.html", {"form": form})
    
 
+# Create form, Clean form, Validate form, 템플릿 렌더링, 리다이렉트(get_absolute_url) 다 해줌
 class EditRoomView(UpdateView):
 
     """EditRoomView Definition"""
