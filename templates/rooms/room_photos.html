@@ -17,12 +17,17 @@
                     <span class="ml-5 text-base">{{photo.caption}}</span>
                 </div>
                 <div class="flex flex-col justify-around w-1/12">
-                    <a class="text-center py-3 rounded-lg font-medium text-sm w-full text-white bg-blue-400" href="">Edit</a>
+                    <a class="text-center py-3 rounded-lg font-medium text-sm w-full text-white bg-blue-400" href="{% url 'rooms:edit-photo' room.pk photo.pk %}">Edit</a>
                     <a class="text-center py-3 rounded-lg font-medium text-sm w-full text-white bg-red-500" href="{% url 'rooms:delete-photo' room.pk photo.pk %}">Delete</a>
                 </div>
             </div>
         {% endfor %}
-            
+        <div class="flex justify-end mt-5">
+            <a href="{% url 'rooms:edit' room.pk %}" class="text-red-500 font-medium text-lg">
+                <i class="fas fa-arrow-circle-left"></i>
+                <span>Back to Edit Room </span>
+            </a>
+        </div>
     
     </div>
 

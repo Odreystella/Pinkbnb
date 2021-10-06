@@ -5,6 +5,7 @@ from django.views.generic import ListView, DetailView, UpdateView, View, FormVie
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django_countries import countries
 from users.mixins import LoggedInOnlyView
 from .models import Room, RoomType, Amenity, Facility, HouseRule, Photo
@@ -176,6 +177,22 @@ def delete_photo(request, room_pk, photo_pk):
     except Room.DoesNotExist:
         # room 없으면
         return redirect(reverse("core:home"))
+
+
+class EditPhotoView(LoggedInOnlyView, SuccessMessageMixin, UpdateView):
+
+    """ EditPhotoView Definition """
+
+    model = Photo
+    template_name = "rooms/photo_edit.html"
+    pk_url_kwarg = "photo_pk"
+    success_message = "Caption of photo is updated"
+    fields = ("caption",)
+
+    def get_success_url(self):   
+        """ if form_valid, save the form and return HttpResponseRedirect(self.get_success_url())"""
+        room_pk = self.kwargs.get("room_pk")
+        return reverse("rooms:photos", kwargs={"pk": room_pk})
 
 
 class CreateRoomView(FormView):
