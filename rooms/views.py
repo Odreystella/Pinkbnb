@@ -3,8 +3,11 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, UpdateView, View, FormView
 from django.http import Http404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django_countries import countries
-from .models import Room, RoomType, Amenity, Facility, HouseRule
+from users.mixins import LoggedInOnlyView
+from .models import Room, RoomType, Amenity, Facility, HouseRule, Photo
 from .forms import SearchForm, CreateRoomForm
 
 class HomeView(ListView):
@@ -18,16 +21,9 @@ class HomeView(ListView):
     context_object_name = "rooms"
 
 
-class RoomDetailView(DetailView):
-
-    """ RoomDetail Definition """
-
-    model = Room
-
-
 class SearchView(View):
 
-    """SearchView Definition"""
+    """ SearchView Definition """
 
     def get(self, request):
         country = request.GET.get("country")
@@ -109,10 +105,17 @@ class SearchView(View):
         return render(request, "rooms/search.html", {"form": form})
    
 
-# Create form, Clean form, Validate form, 템플릿 렌더링, 리다이렉트(get_absolute_url) 다 해줌
-class EditRoomView(UpdateView):
+class DetailRoomView(DetailView):
 
-    """EditRoomView Definition"""
+    """ RoomDetail Definition """
+
+    model = Room
+
+
+# Create form, Clean form, Validate form, 템플릿 렌더링, 리다이렉트(get_absolute_url) 다 해줌
+class EditRoomView(LoggedInOnlyView, UpdateView):
+
+    """ EditRoomView Definition """
 
     model = Room
     template_name = "rooms/room_edit.html"
@@ -136,14 +139,48 @@ class EditRoomView(UpdateView):
         "house_rules",
     )
 
-    def get_object(self, queryset=None):
-        room = super().get_object(queryset=queryset)
-        # if room.host.pk != self.request.user.pk:
-            # raise Http404() 
+    def get_object(self, queryset=None):   # return the object the view is displaying
+        room = super().get_object(queryset=queryset)   
+        if room.host.pk != self.request.user.pk:   # room의 host가 아닌 다른 유저가 수정하지 못하게끔 함
+            raise Http404() 
         return room
 
 
+class RoomPhotosView(LoggedInOnlyView, DetailView):
+
+    model = Room
+    template_name = "rooms/room_photos.html"
+
+    def get_object(self, queryset=None):   # return the object the view is displaying
+        room = super().get_object(queryset=queryset)   
+        if room.host.pk != self.request.user.pk:   # room의 host가 아닌 다른 유저가 수정하지 못하게끔 함
+            raise Http404() 
+        return room
+
+
+@login_required
+def delete_photo(request, room_pk, photo_pk):
+    print(f"Should delete {photo_pk} from {room_pk}")
+    user = request.user
+    try:
+        # room 찾기
+        room = Room.objects.get(pk=room_pk)
+        # 1. user == room.host, delete photo
+        if user == room.host:
+            Photo.objects.filter(pk=photo_pk).delete()
+            messages.success(request, "Photo deleted")
+        # 2. user != room.host, error messages
+        else:
+            messages.error(request, "Photo can be deleted by host of this room.")
+        return redirect(reverse("rooms:photos", kwargs={"pk": room_pk}))
+    except Room.DoesNotExist:
+        # room 없으면
+        return redirect(reverse("core:home"))
+
+
 class CreateRoomView(FormView):
+
+    """ CreateRoomView Definition """
 
     form_class = CreateRoomForm
     template_name = "rooms/room_create.html"
