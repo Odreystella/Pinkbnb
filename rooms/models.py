@@ -76,7 +76,7 @@ class Room(AbstractTimeStamped):
     check_out = models.TimeField()
     instant_book = models.BooleanField(default=False)
     host = models.ForeignKey(
-        "users.User", on_delete=models.CASCADE, related_name="rooms"
+        "users.User", on_delete=models.PROTECT, related_name="rooms"
     )
     room_type = models.ForeignKey(
         "RoomType", on_delete=models.SET_NULL, null=True, related_name="rooms"
