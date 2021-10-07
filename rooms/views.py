@@ -1,15 +1,16 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views.generic import ListView, DetailView, UpdateView, View, FormView
+from django.views.generic import ListView, DetailView, UpdateView, View, FormView, CreateView
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.views.generic.edit import CreateView
 from django_countries import countries
 from users.mixins import LoggedInOnlyView
 from .models import Room, RoomType, Amenity, Facility, HouseRule, Photo
-from .forms import SearchForm, CreateRoomForm
+from .forms import SearchForm, CreatePhotoForm, CreateRoomForm
 
 class HomeView(ListView):
 
@@ -191,8 +192,22 @@ class EditPhotoView(LoggedInOnlyView, SuccessMessageMixin, UpdateView):
 
     def get_success_url(self):   
         """ if form_valid, save the form and return HttpResponseRedirect(self.get_success_url())"""
-        room_pk = self.kwargs.get("room_pk")
+        room_pk = self.kwargs.get("room_pk")   # room_pk가 필요함
         return reverse("rooms:photos", kwargs={"pk": room_pk})
+
+
+class AddPhotoView(LoggedInOnlyView, FormView):
+
+    """ AddPhotoView Definition """
+    
+    form_class = CreatePhotoForm
+    template_name = "rooms/photo_create.html"
+
+    def form_valid(self, form):
+        room_pk = self.kwargs.get("pk")
+        form.save(room_pk)
+        messages.success(self.request, "Photo uploaded")
+        return redirect(reverse("rooms:photos", kwargs={"pk": room_pk}))
 
 
 class CreateRoomView(FormView):
