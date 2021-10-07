@@ -5,6 +5,7 @@ from django.views import View
 from django.contrib.auth.views import PasswordChangeView
 from django.views.generic import FormView, DetailView, UpdateView
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.files.base import ContentFile
@@ -282,3 +283,18 @@ class UpdatePasswordView(LoggedInOnlyView, EmailLoginOnlyView, SuccessMessageMix
 
     def get_success_url(self):
         return self.request.user.get_absolute_url()
+
+
+@login_required
+def switch_hosting(request):
+
+    # 세션 삭제하는 방법 1
+    # request.session.pop("is_hosting", True)
+
+    # 방법 2
+    try:
+        del request.session["is_hosting"]
+    except KeyError:
+        request.session["is_hosting"] = True
+        
+    return redirect(reverse("core:home"))
