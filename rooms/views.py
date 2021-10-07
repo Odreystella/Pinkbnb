@@ -196,9 +196,9 @@ class EditPhotoView(LoggedInOnlyView, SuccessMessageMixin, UpdateView):
         return reverse("rooms:photos", kwargs={"pk": room_pk})
 
 
-class AddPhotoView(LoggedInOnlyView, FormView):
+class UploadPhotoView(LoggedInOnlyView, FormView):
 
-    """ AddPhotoView Definition """
+    """ UploadPhotoView Definition """
     
     form_class = CreatePhotoForm
     template_name = "rooms/photo_create.html"
@@ -210,7 +210,7 @@ class AddPhotoView(LoggedInOnlyView, FormView):
         return redirect(reverse("rooms:photos", kwargs={"pk": room_pk}))
 
 
-class CreateRoomView(FormView):
+class CreateRoomView(LoggedInOnlyView, FormView):
 
     """ CreateRoomView Definition """
 
@@ -218,9 +218,9 @@ class CreateRoomView(FormView):
     template_name = "rooms/room_create.html"
 
     def form_valid(self, form):
-        room = form.save()
-        room.host = self.request.user
-        room.save()
-        form.save_m2m()
-        # messages.success(self.request, "Room Created")
+        room = form.save()              # CreateRoomForm에서 만들어진 room을 리턴함
+        room.host = self.request.user   # form 저장하기 전에 host에 인스턴스 넣어줌
+        room.save()                     # 이제야 데이터베이스에 저장됨
+        form.save_m2m()                 # save_m2m()은 데이터베이스에 인스턴스가 만들어져야 호출할 수 있음
+        messages.success(self.request, "Room Created")
         return redirect(reverse("rooms:detail", kwargs={"pk": room.pk}))

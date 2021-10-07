@@ -111,12 +111,14 @@ class Room(AbstractTimeStamped):
             return 0
 
     def first_photo(self):
-        photo, = self.photos.all()[:1]
-        return photo.file.url
+        try:
+            photo, = self.photos.all()[:1]  # array의 원소를 변수에 할당하는 방법, unpacking values 라고 함
+            return photo.file.url           # photo는 더이상 queryset이 아니고 인스턴스가 됨
+        except ValueError:
+            return None
 
     def get_next_four_photos(self):
         photos =  self.photos.all()[1:5]
-        print(photos)
         return photos
     
     

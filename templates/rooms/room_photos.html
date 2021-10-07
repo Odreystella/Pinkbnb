@@ -10,7 +10,7 @@
 {% block content %}
     <div class="container w-2/5 mx-auto my-24 flex flex-col">
         <div class="my-10 w-full ml-96 pl-52">
-            <a href="{% url 'rooms:add-photo' room.pk %}" class="text-center py-3 px-4 rounded-lg font-medium text-sm w-full text-white bg-red-500 ">Upload Photo</a>
+            <a href="{% url 'rooms:upload-photo' room.pk %}" class="text-center py-3 px-4 rounded-lg font-medium text-sm w-full text-white bg-red-500 ">Upload Photo</a>
         </div>
         
         {% for photo in room.photos.all %}
