@@ -13,18 +13,20 @@
 
 <body class="text-gray-700 mt-20 font-light">
     {% include "partials/messages.html" %}
-    <header class="container max-w-full inset-0 flex items-center justify-between px-10 h-20 border-b border-gray-400 fixed bg-white">
+    <header class="container max-w-full inset-0 flex items-center justify-between px-28 h-20 shadow-md fixed bg-white">
         <div class="flex items-center">
-            <a href="{% url 'core:home' %}" class="mr-6">
+            <a href="{% url 'core:home' %}" class="mr-6 flex ">
                 <img class="w-7" src="{% static 'img/logo.png' %}" alt="">
+                <span class="font-bold text-red-500 ml-2 text-xl">pinkbnb</span>
             </a>
-            
-            {% block search-bar %}
-            <form action="{% url 'rooms:search' %}" method="GET" class="w-full">
-                <input class="border w-full px-6 py-3 text-sm placeholder-gray-700 font-medium rounded-3xl shadow-sm transition duration-200 hover:shadow-md focus:outline-none" type="text" name="city" placeholder="Start your search">
-            </form>
-            {% endblock search-bar %}
         </div>
+            
+        {% block search-bar %}
+        <form action="{% url 'rooms:search' %}" method="GET" class="w-80 flex">
+            <input class="border border-gray-300 w-full px-6 py-3 text-sm placeholder-gray-700 font-medium rounded-3xl shadow-md transition duration-200 hover:shadow-lg focus:outline-none" type="text" name="city" placeholder="Start your search">
+            <button class="bg-red-500 rounded-full w-9 h-9 my-2 -ml-12"><i class="fas fa-search my-3 mx-3 text-white text-sm"></i></button>
+        </form>
+        {% endblock search-bar %}
 
         {% include "partials/nav.html" %}
     </header>
