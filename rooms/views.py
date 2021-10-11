@@ -156,7 +156,7 @@ class RoomPhotosView(LoggedInOnlyView, DetailView):
     def get_object(self, queryset=None):   # return the object the view is displaying
         room = super().get_object(queryset=queryset)   
         if room.host.pk != self.request.user.pk:   # room의 host가 아닌 다른 유저가 수정하지 못하게끔 함
-            raise Http404() 
+            raise Http404()                        # DEBUG=False여야 내가 만든 404.html이 렌더링됨
         return room
 
 
