@@ -1,11 +1,21 @@
 from django.contrib import admin
-from .models import Reservation
+from .models import Reservation, BookedDay
+
+
+@admin.register(BookedDay)
+class BookedDayAdmin(admin.ModelAdmin):
+
+    """ BookedDay Admin Definition """
+    
+    list_display = (
+        "day", "reservation"
+    )
 
 
 @admin.register(Reservation)
 class ReservationAdmin(admin.ModelAdmin):
 
-    """Reservation Admin Definition"""
+    """ Reservation Admin Definition """
 
     list_display = (
         "room",

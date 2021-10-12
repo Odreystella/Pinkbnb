@@ -141,3 +141,5 @@ cython_debug/
 uploads/
 
 node_modules/
+
+rooms/templatetags/sexy_capitals.py
