@@ -63,7 +63,7 @@ class Reservation(AbstractTimeStamped):
             existing_booked_day = BookedDay.objects.filter(reservation__room=self.room, day__range=(start, end)).exists()
             if not existing_booked_day:
                 super().save(*args, **kwargs)    # create reservation instance first
-                for i in range(gap.days + 1):
+                for i in range(gap.days):
                     day = start + datetime.timedelta(days=i)
                     BookedDay.objects.create(day=day, reservation=self)
                 return
