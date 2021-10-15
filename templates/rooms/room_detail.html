@@ -92,10 +92,10 @@
                             {% for day in calendar.get_days  %}
                                 {% is_booked room day as is_booked_bool %}
                                 {% if day.number != 0 %}
-                                    {% if day.past %}
-                                        <span class="bg-gray-200 w-full text-center rounded-sm p-1 text-gray-300">{{day}}</span>
-                                    {% elif is_booked_bool %}
+                                    {% if is_booked_bool %}
                                         <span class="bg-gray-200 w-full text-center rounded-sm p-1 text-gray-300 line-through">{{day}}</span>
+                                    {% elif day.past %}
+                                        <span class="bg-gray-200 w-full text-center rounded-sm p-1 text-gray-300">{{day}}</span>
                                     {% else %}    
                                         <a href="{% url 'reservations:create' room.pk day.year day.month day.number %}" class="bg-gray-200 w-full text-center rounded-sm p-1 hover:bg-pink-300 hover:text-white cursor-pointer">{{day}}</a>
                                     {% endif %}
