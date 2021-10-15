@@ -2,7 +2,6 @@ import datetime
 from django.db import models
 from django.utils import timezone
 from core.models import AbstractTimeStamped
-from . import managers
 
 
 class BookedDay(models.Model):
@@ -35,12 +34,11 @@ class Reservation(AbstractTimeStamped):
     check_in = models.DateField()
     check_out = models.DateField()
     guest = models.ForeignKey(
-        "users.User", on_delete=models.CASCADE, related_name="reservations"
+        "users.User", on_delete=models.CASCADE, related_name="reservations",
     )
     room = models.ForeignKey(
-        "rooms.Room", on_delete=models.CASCADE, related_name="reservations"
+        "rooms.Room", on_delete=models.CASCADE, related_name="reservations",
     )
-    objects = managers.CustomReservationManager()
 
     def __str__(self):
         return f"{self.room} - {self.check_in}"
@@ -62,7 +60,10 @@ class Reservation(AbstractTimeStamped):
             start = self.check_in
             end = self.check_out
             gap = end - start
-            existing_booked_day = BookedDay.objects.filter(reservation__room=self.room, day__range=(start, end)).exists()
+            existing_booked_day = BookedDay.objects.filter(reservation__room=self.room, day=start).exists()
+            existing = BookedDay.objects.filter(reservation__room=self.room).filter(day=start)
+            print(start, end, gap)
+            print(existing)
             if not existing_booked_day:
                 super().save(*args, **kwargs)    # create reservation instance first
                 for i in range(gap.days):
