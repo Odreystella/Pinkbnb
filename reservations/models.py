@@ -56,14 +56,11 @@ class Reservation(AbstractTimeStamped):
     is_finished.boolean = True
 
     def save(self, *args, **kwargs):
-        if True:
+        if self.pk is None:           # 새로운 reservation 인스턴스 이면 BookedDay obj 만들어줌
             start = self.check_in
             end = self.check_out
             gap = end - start
             existing_booked_day = BookedDay.objects.filter(reservation__room=self.room, day=start).exists()
-            existing = BookedDay.objects.filter(reservation__room=self.room).filter(day=start)
-            print(start, end, gap)
-            print(existing)
             if not existing_booked_day:
                 super().save(*args, **kwargs)    # create reservation instance first
                 for i in range(gap.days):

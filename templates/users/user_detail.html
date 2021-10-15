@@ -23,12 +23,12 @@
             <span class="text-lg mb-5">{{user_obj.bio}}</span>
             
             {% if user == user_obj %}
-                <a href="{% url 'users:update' %}" class="btn-link">Edit Profile</a>
+                <a href="{% url 'users:update' %}" class="btn-link mb-3">Edit Profile</a>
             {% endif %}
         </div>
-        
+
         {% if user_obj.rooms.count > 0 %}
-            <h3 class="mb-12 text-2xl text-center">{{user_obj.first_name}}'s Room </h3>
+            <h3 class="mb-12 text-2xl text-center font-medium">{{user_obj.first_name}}'s Room </h3>
             <div class="container mx-auto pb-10">
                 <div class="flex flex-wrap mx-20 mb-10">
                     {% for room in user_obj.rooms.all %}
@@ -36,6 +36,28 @@
                     {% endfor %}
                 </div>
             </div>
+        {% endif %}
+
+        {% if user_obj.reservations.count > 0 %}
+        <h3 class="my-12 text-2xl text-center font-medium">{{user_obj.first_name}}'s Reservations</h3>
+        <div class="container mx-auto py-10">
+            <ul class="flex flex-wrap mx-20 mb-10">
+                <li class="flex justify-around p-2 mb-2 w-full text-xl font-bold">
+                    <span class="mx-40">Room Name</span>
+                    <span>Check-In</span>
+                    <span>Check-Out</span>
+                    <span>Status</span>
+                </li>
+                {% for reservation in user_obj.reservations.all %}
+                <a href="{% url 'reservations:detail' reservation.pk %}" class="w-full m-1"><li class="flex justify-around bg-gray-200 p-2 rounded-md">
+                    <span class="font-medium">{{reservation.room}}</span>
+                    <span class="font-medium">{{reservation.check_in}}</span>
+                    <span class="font-medium">{{reservation.check_out}}</span>
+                    <span class="font-medium">{{reservation.status}}</span>
+                </li></a>
+                {% endfor %}
+            </ul>
+        </div>
         {% endif %}
     </div>
     
