@@ -50,7 +50,7 @@
                 </li>
                 {% for reservation in user_obj.reservations.all %}
                 <a href="{% url 'reservations:detail' reservation.pk %}" class="w-full m-1"><li class="flex justify-around bg-gray-200 p-2 rounded-md">
-                    <span class="font-medium">{{reservation.room}}</span>
+                    <span class="font-medium w-2/6">{{reservation.room}}</span>
                     <span class="font-medium">{{reservation.check_in}}</span>
                     <span class="font-medium">{{reservation.check_out}}</span>
                     <span class="font-medium">{{reservation.status}}</span>
