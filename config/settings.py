@@ -64,6 +64,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -146,9 +147,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
 
 # media 파일을 실제 저장하는 위치, /home/odreystella/Documents/dev/airbnb-clone/uploads
+
 MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
 
 # MEIDA_ROOT에 저장된 파일을 다룸, /media/uploads의 {폴더명}
+
 MEDIA_URL = "/media/"
 
 # Email Configuration
@@ -163,3 +166,9 @@ EMAIL_USE_TLS = True
 # Auth
 
 LOGIN_URL = "/users/login/"
+
+# Locale
+LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
+
+# Language
+LANGUAGE_COOKIE_NAME = "django_language"

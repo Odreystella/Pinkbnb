@@ -1,3 +1,15 @@
-<footer class="container mx-auto py-10 border-t font-medium">
-    &copy; 2021 Pinkbnb
+{% load i18n %}
+
+<footer class="container mx-auto py-10 border-t font-medium text-center">
+    <div class="flex flex-col">
+        <span>{% trans "All rights reserved" %}.</span>
+        <span>&copy; 2021 Pinkbnb</span>
+    </div>
+    <div class="flex mt-10">
+        {% get_current_language as LANGUAGE_CODE %}
+        <select name="" id="trans-lang" class="w-1/5 h-8">
+            <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
+            <option value="es" {% if LANGUAGE_CODE == 'es' %}selected{% endif %}>Spanish</option>
+        </select>
+    </div>
 </footer>
