@@ -7,6 +7,7 @@ from django.db import models
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 from django.urls import reverse
+from core.managers import CustomUserManager
 
 
 class User(AbstractUser):
@@ -66,6 +67,8 @@ class User(AbstractUser):
     email_secret = models.CharField(_("email_secret"), max_length=20, default="", blank=True)
     login_method = models.CharField(_("login_method"), max_length=50, choices=LOGIN_CHOICES, default=LOGIN_EMAIL)
 
+    objects = CustomUserManager()
+    
     def __str__(self):
         return self.username
 
