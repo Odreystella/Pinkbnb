@@ -37,8 +37,7 @@
             </div>
         </div>
         <div class="flex justify-between py-5 border-b hover:bg-gray-50">
-            <a class="text-lg font-medium w-full" href=""><i class="fas fa-comment-alt pr-3"></i>Message Host</a>
-            
+            <a class="text-lg font-medium w-full" href="{% url 'conversations:go' reservation.room.host.pk reservation.guest.pk %}"><i class="fas fa-comment-alt pr-3"></i>Message Host</a>
             <i class="fas fa-chevron-right cursor-pointer"></i>
         </div>
         <div class="flex justify-between border-section">
