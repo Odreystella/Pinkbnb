@@ -7,7 +7,7 @@ class List(AbstractTimeStamped):
 
     name = models.CharField(max_length=80)
     user = models.OneToOneField(
-        "users.User", on_delete=models.CASCADE, related_name="lists"
+        "users.User", on_delete=models.CASCADE, related_name="list"
     )
     rooms = models.ManyToManyField("rooms.Room", blank=True, related_name="lists")
 
