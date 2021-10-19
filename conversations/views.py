@@ -17,3 +17,7 @@ def go_conversations(request, a_pk, b_pk):
             conversation = Conversation.objects.create()
             conversation.participants.add(user_one, user_two)
         return redirect(reverse("conversations:detail", kwargs={"pk": conversation.pk}))
+
+class DetailConversationView(DetailView):
+    
+    model = Conversation
