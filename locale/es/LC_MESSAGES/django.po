@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-18 18:57+0900\n"
+"POT-Creation-Date: 2021-10-19 13:15+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,33 +26,41 @@ msgstr "Buscar por Ciudad"
 msgid "All rights reserved"
 msgstr "Todos los derechos reservados"
 
-#: templates/partials/nav.html:6
+#: templates/partials/nav.html:7
 msgid "Stop hosting"
 msgstr "Deja de hacer el hosting"
 
-#: templates/partials/nav.html:8
+#: templates/partials/nav.html:9
 msgid "Switching to hosting"
 msgstr "Cambiando a ser un huésped"
 
-#: templates/partials/nav.html:13
+#: templates/partials/nav.html:14
 msgid "Create Room"
 msgstr "Crear espacio"
 
-#: templates/partials/nav.html:15
+#: templates/partials/nav.html:16
 msgid "Profile"
 msgstr "Profile"
 
-#: templates/partials/nav.html:16
+#: templates/partials/nav.html:17
 msgid "Log out"
 msgstr "Salga de la lista."
 
-#: templates/partials/nav.html:18
+#: templates/partials/nav.html:19
 msgid "Log in"
 msgstr "en el registro"
 
-#: templates/partials/nav.html:19
+#: templates/partials/nav.html:20
 msgid "Sign up"
 msgstr "Inscribirse"
+
+#: templates/rooms/room_detail.html:36
+msgid "Remove from Favourites"
+msgstr "Quitar de favoritos"
+
+#: templates/rooms/room_detail.html:40
+msgid "Save to Favourites"
+msgstr "Guardar en favoritos"
 
 #: templates/rooms/room_list.html:27
 #, python-format
