@@ -8,10 +8,8 @@
 {% endblock search-bar %}
 
 {% block content %}
-
     <div class="container mx-auto my-10 mt-32 flex justify-between min-h-50vh px-20">
-
-        <div class="border w-1/4 p-10">
+        <div class="border w-1/4 p-10 h-72">
             <span class="text-center w-full block text-lg font-medium">Conversation between:</span>
             <div class="flex justify-between mt-10 items-center">
                 {% for user in conversation.participants.all  %}
@@ -25,25 +23,38 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="border flex-grow ml-10 p-10 flex flex-col">
-            {% for message in conversation.messages.all %}
-                <div class="mb-10
-                    {% if message.user.pk == user.pk  %}
-                        self-end
-                    {% endif %}">
-                    <span class="text-sm font-medium text-gray-600">{{message.user.first_name}}</span>
-                    <div class="mt-px p-5 w-56 rounded
-                        {% if message.user.pk != user.pk  %}
-                            bg-blue-300
-                            text-white
-                        {% else %}
-                            bg-gray-300
+        <div class="flex-grow">
+            <div class="border ml-10 p-10 flex flex-col">
+            {% if conversation.messages.count == 0 %}
+                no messages
+            {% else %}    
+                {% for message in conversation.messages.all %}
+                    <div class="mb-10
+                        {% if message.user.pk == user.pk  %}
+                            self-end
                         {% endif %}">
-                        {{message.message}}
+                        <div class="flex">
+                            {% include "mixins/user_avatar.html" with user=user h_and_w='w-8 h-8' text='text-lg' %}
+                            <span class="text-sm font-medium text-gray-600 pl-2 pt-2">{{message.user.first_name}}</span>
+                        </div>
+                        <div class="mt-2 p-5 w-56 rounded
+                            {% if message.user.pk != user.pk  %}
+                                bg-blue-300
+                                text-white
+                            {% else %}
+                                bg-gray-300
+                            {% endif %}">
+                            <span class="w-56">{{ message.message|wordwrap:25|linebreaksbr }}</span>
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            {% endif %}
         </div>
-        
+        <form class="mt-10 w-4/5 mx-auto" method="POST">
+            {% csrf_token %}
+            <input class="mb-5" type="text" name="message" placeholder="Write a Message" required />
+            <button class="btn-link">Send</button>
+        </form>
+        </div>
     </div>
 {% endblock content %} 

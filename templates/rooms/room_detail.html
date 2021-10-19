@@ -32,7 +32,7 @@
             
             {% if on_favs_bool %}
                 <a href="{% url 'lists:toggle-room' room.pk %}?action=remove" class="mb-10 font-bold text-gray-300">
-                    <i class="fas fa-bookmark"></i>
+                    <i class="far fa-bookmark"></i>
                     {% trans 'Remove from Favourites' %}</a>
             {% else %}
                 <a href="{% url 'lists:toggle-room' room.pk %}?action=add" class="mb-10 font-bold text-pink-500">
