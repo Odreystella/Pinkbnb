@@ -14,6 +14,7 @@
             <li class="ml-8"><a class="py-10"href="{% url 'rooms:create' %}">{% trans 'Create Room' %}</li></a>
         {% endif %}
         <li class="ml-8"><a class="py-10" href="{{user.get_absolute_url}}">{% trans 'Profile' %}</a></li>
+        <li class="ml-8"><a class="py-10" href="{% url 'lists:see-favs' %}">{% trans 'Favs' %} ({{user.list.rooms.count}})</a></li>
         <li class="ml-8"><a class="py-10" href="{% url 'users:logout' %}">{% trans 'Log out' %}</a></li>
     {% else %}
         <li class="ml-8"><a class="py-10"href="{% url 'users:login' %}">{% trans 'Log in' %}</a></li>
