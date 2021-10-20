@@ -6,6 +6,11 @@ name = "pypi"
 [packages]
 pathspec = "*"
 django = "*"
+django-dotenv = "*"
+django-countries = "*"
+django-seed = "*"
+pillow = "*"
+requests = "*"
 
 [dev-packages]
 awsebcli = "*"
