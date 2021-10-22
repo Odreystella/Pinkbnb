@@ -48,6 +48,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "django_countries",
     "django_seed",
+    "storages",
 ]
 
 PROJECT_APPS = [
@@ -191,8 +192,19 @@ LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
 # Language
 LANGUAGE_COOKIE_NAME = "django_language"
 
-# Sentry initalize
+# Sentry initalize & AWS s3
 if not DEBUG:
+
+    DEFAULT_FILE_STORAGE = "config.custom_storages.UploadStorage"
+    STATICFILES_STORAGE = "config.custom_storages.StaticStorage"
+    AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = "pinkbnb-s3"
+    AWS_S3_REGION_NAME = "ap-northeast-2"
+    
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"
+    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static"   # s3에 업로드할 경로 오버라이딩
+
     sentry_sdk.init(
     dsn=os.environ.get("SENTRY_URL"),
     integrations=[DjangoIntegration()],
