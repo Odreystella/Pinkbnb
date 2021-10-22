@@ -203,7 +203,7 @@ if not DEBUG:
     AWS_S3_REGION_NAME = "ap-northeast-2"
     
     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"
-    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static"   # s3에 업로드할 경로 오버라이딩
+    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"   # s3에 업로드할 경로 오버라이딩
     STATIC_ROOT = os.path.join(BASE_DIR, ".static_root")    # 배포시, collectstatic 할 떄 정적 파일 모으는 위치
 
     sentry_sdk.init(
