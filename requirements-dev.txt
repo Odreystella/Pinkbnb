@@ -15,7 +15,7 @@ awsebcli==3.20.2
 backports.entry-points-selectable==1.1.0 ; python_version >= '2.7'
 bcrypt==3.2.0 ; python_version >= '3.6'
 blessed==1.19.0 ; python_version >= '2.7'
-botocore==1.21.65 ; python_version >= '3.6'
+botocore==1.22.1 ; python_version >= '3.6'
 cached-property==1.5.2
 cement==2.8.2
 certifi==2021.10.8
