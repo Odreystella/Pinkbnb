@@ -11,6 +11,7 @@ django-countries = "*"
 django-seed = "*"
 pillow = "*"
 requests = "*"
+sentry-sdk = "*"
 
 [dev-packages]
 awsebcli = "*"

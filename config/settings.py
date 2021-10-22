@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,12 +24,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", "s8gJzlkMx1Syx4j8SlhcsmDKOhsM87b3")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("DEBUG"))
 
-ALLOWED_HOSTS = ["pinkbnb.eba-qd3pd6un.ap-northeast-2.elasticbeanstalk.com",
+ALLOWED_HOSTS = [
+    "pinkbnb.eba-qd3pd6un.ap-northeast-2.elasticbeanstalk.com",
+    "localhost",
 ]
 
 
@@ -93,7 +97,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if DEBUG is False:
+if DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -186,3 +190,15 @@ LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
 
 # Language
 LANGUAGE_COOKIE_NAME = "django_language"
+
+# Sentry initalize
+if not DEBUG:
+    sentry_sdk.init(
+    dsn=os.environ.get("SENTRY_URL"),
+    integrations=[DjangoIntegration()],
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True  # 어떤 유저가 어떤 에러를 겪었는지 알 수 있음
+)
+
