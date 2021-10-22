@@ -148,4 +148,4 @@ rooms/templatetags/sexy_capitals.py
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 
-.static_root
+
