@@ -16,7 +16,6 @@ django-storages = "*"
 boto3 = "*"
 
 [dev-packages]
-awsebcli = "*"
 pipenv-to-requirements = "*"
 
 [requires]
