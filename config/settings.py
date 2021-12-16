@@ -32,7 +32,7 @@ ALLOWED_HOSTS = [
     "pinkbnb.eba-qd3pd6un.ap-northeast-2.elasticbeanstalk.com",
     "localhost",
     "3.35.156.177",
-    "ap-northeast-2.compute.amazonaws.com"
+    "ec2-3-35-156-177.ap-northeast-2.compute.amazonaws.com"
 ]
 
 
