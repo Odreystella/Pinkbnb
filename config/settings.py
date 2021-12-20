@@ -29,10 +29,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "s8gJzlkMx1Syx4j8SlhcsmDKOhsM87b3")
 DEBUG = bool(os.environ.get("DEBUG"))
 
 ALLOWED_HOSTS = [
-    "pinkbnb.eba-qd3pd6un.ap-northeast-2.elasticbeanstalk.com",
     "localhost",
-    "3.35.156.177",
-    "ec2-3-35-156-177.ap-northeast-2.compute.amazonaws.com"
+    "3.35.218.65",
+    "ec2-3-35-218-65.ap-northeast-2.compute.amazonaws.com"
 ]
 
 
