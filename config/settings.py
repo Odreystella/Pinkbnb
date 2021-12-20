@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,12 +27,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "s8gJzlkMx1Syx4j8SlhcsmDKOhsM87b3")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get("DEBUG"))
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "localhost",
     "3.35.218.65",
-    "ec2-3-35-218-65.ap-northeast-2.compute.amazonaws.com"
+    "ec2-3-35-218-65.ap-northeast-2.compute.amazonaws.com",
+    ".herokuapp.com"
 ]
 
 
@@ -72,6 +74,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware"
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -98,25 +101,31 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if DEBUG:
-    DATABASES = {
+DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-else:
-     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "HOST": os.environ.get("RDS_HOST"),
-            "NAME": os.environ.get("RDS_NAME"),
-            "USER": os.environ.get("RDS_USER"),
-            "PASSWORD": os.environ.get("RDS_PASSWORD"),
-            "PORT": "5432",
-        }
-    }
 
+# if DEBUG:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.sqlite3",
+#             "NAME": BASE_DIR / "db.sqlite3",
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql",
+#             "HOST": os.environ.get("RDS_HOST"),
+#             "NAME": os.environ.get("RDS_NAME"),
+#             "USER": os.environ.get("RDS_USER"),
+#             "PASSWORD": os.environ.get("RDS_PASSWORD"),
+#             "PORT": "5432",
+#         }
+#     }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -195,24 +204,26 @@ LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
 LANGUAGE_COOKIE_NAME = "django_language"
 
 # Sentry initalize & AWS s3
-if not DEBUG:
+# if not DEBUG:
 
-    DEFAULT_FILE_STORAGE = "config.custom_storages.UploadStorage"
-    STATICFILES_STORAGE = "config.custom_storages.StaticStorage"
-    AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
-    AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-    AWS_STORAGE_BUCKET_NAME = "pinkbnb-s3"
-    AWS_S3_REGION_NAME = "ap-northeast-2"
+#     DEFAULT_FILE_STORAGE = "config.custom_storages.UploadStorage"
+#     STATICFILES_STORAGE = "config.custom_storages.StaticStorage"
+#     AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+#     AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+#     AWS_STORAGE_BUCKET_NAME = "pinkbnb-s3"
+#     AWS_S3_REGION_NAME = "ap-northeast-2"
     
-    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"
-    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"   # s3에 업로드할 경로 오버라이딩 
+#     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"
+#     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"   # s3에 업로드할 경로 오버라이딩 
 
-    sentry_sdk.init(
-    dsn=os.environ.get("SENTRY_URL"),
-    integrations=[DjangoIntegration()],
+#     sentry_sdk.init(
+#     dsn=os.environ.get("SENTRY_URL"),
+#     integrations=[DjangoIntegration()],
 
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True  # 어떤 유저가 어떤 에러를 겪었는지 알 수 있음
-)
+#     # If you wish to associate users to errors (assuming you are using
+#     # django.contrib.auth) you may enable sending PII data.
+#     send_default_pii=True  # 어떤 유저가 어떤 에러를 겪었는지 알 수 있음
+#     )
 
+# Activate Django-Heroku.
+django_heroku.settings(locals())
