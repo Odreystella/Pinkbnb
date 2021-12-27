@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "s8gJzlkMx1Syx4j8SlhcsmDKOhsM87b3")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -168,7 +168,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]  # django가 airbnb-clone/static에서 정적파일을 불러옴
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")    # 배포시, collectstatic 할 때 정적 파일 모으는 위치
- 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -204,10 +204,12 @@ LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
 LANGUAGE_COOKIE_NAME = "django_language"
 
 # Sentry initalize & AWS s3
-# if not DEBUG:
+if not DEBUG:
+
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 #     DEFAULT_FILE_STORAGE = "config.custom_storages.UploadStorage"
-#     STATICFILES_STORAGE = "config.custom_storages.StaticStorage"
+    # STATICFILES_STORAGE = "config.custom_storages.StaticStorage"
 #     AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 #     AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 #     AWS_STORAGE_BUCKET_NAME = "pinkbnb-s3"
